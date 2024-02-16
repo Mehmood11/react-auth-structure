@@ -6,12 +6,15 @@ import { RouterProvider } from "react-router-dom";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./store";
 import { routes } from "./routes/route";
+import AuthInitializer from "./hoc/with-auth-initializer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ReduxProvider store={store}>
-      <RouterProvider router={routes} />
+      <AuthInitializer>
+        <RouterProvider router={routes} />
+      </AuthInitializer>
     </ReduxProvider>
   </React.StrictMode>
 );

@@ -1,52 +1,31 @@
-// import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "../store";
+import {
+  handleAuthentication,
+  setAxiosInterceptors,
+} from "../helpers/interceptors";
+import { logout } from "../store/slices/auth/auth-slice";
 
-// import { LogoSsoAdmin, SplashScreen } from "common";
-// import { useAuthMeMutation } from "@services/auth-api";
-// import { useDispatch, useSelector } from "@store";
-// import { authActions } from "@slices";
-// import toast from "react-hot-toast";
+const AuthInitializer = ({ children }) => {
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const initAuth = async () => {
+      setAxiosInterceptors({
+        onLogout: () => dispatch(logout()),
+      });
+      handleAuthentication();
+      setLoading(false);
+    };
+    initAuth();
+  }, [dispatch]);
 
-// export function AuthInitializer(props){
-//   const [isInitialized, setIsInitialized] = useState(false);
+  if (isLoading) {
+    return <>Loading....</>;
+  }
 
-//   const {
-//     auth: {
-//       refreshToken,
-//       accessToken,
-//       user: { userId },
-//     },
-//   } = useSelector(
-//     (state: { auth }) => state
-//   );
-//   const [mutation, { isLoading }] = useAuthMeMutation();
-//   const { children, handleTheme } = props;
-//   const dispatch = useDispatch();
+  return children;
+};
 
-//   const initialize = useCallback(async () => {
-//     if (accessToken && refreshToken) {
-//       try {
-//         await mutation({ userId, refreshToken }).unwrap();
-//       } catch (error) {
-//         toast.error(error?.data?.message || "Something Went Wrong");
-//         dispatch(authActions.logout());
-//       }
-//     } else {
-//       dispatch(authActions.logout());
-//     }
-//     setIsInitialized(true);
-//   }, []);
-
-//   useEffect(() => {
-//     void initialize();
-//   }, [initialize]);
-
-
-//   if (isLoading || !isInitialized) {
-//     return (
-//       <>Logo</>
-//     );
-//   }
-
-//   return <>{children}</>;
-// }
+export default AuthInitializer;
