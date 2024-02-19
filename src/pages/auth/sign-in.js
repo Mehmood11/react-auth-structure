@@ -80,6 +80,7 @@ const SignIn = () => {
                 onChange={handleInputChange}
               />
             </Form.Group>
+            <h4>{errorMessage}</h4>
             <Button variant="success" type="submit" className="mb-3">
               Submit
             </Button>

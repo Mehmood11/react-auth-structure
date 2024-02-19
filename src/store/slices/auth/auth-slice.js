@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInApi } from "./auth-api";
+import { signInApi, signUpApi } from "./auth-api";
 import { REQUEST_STATUS } from "../../../constants/request-status";
 
 const initialState = {
@@ -25,6 +25,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Sign in Api call
     builder.addCase(signInApi.pending, (state, action) => {
       state.loginRequestStatus = REQUEST_STATUS.LOADING;
     });
@@ -41,6 +42,17 @@ const authSlice = createSlice({
     });
     builder.addCase(signInApi.rejected, (state, error) => {
       state.isAuthenticated = false;
+      state.loginRequestStatus = REQUEST_STATUS.FAILURE;
+    });
+
+    // Sign Up Api call
+    builder.addCase(signUpApi.pending, (state) => {
+      state.loginRequestStatus = REQUEST_STATUS.LOADING;
+    });
+    builder.addCase(signUpApi.fulfilled, (state) => {
+      state.loginRequestStatus = REQUEST_STATUS.SUCCESS;
+    });
+    builder.addCase(signUpApi.rejected, (state) => {
       state.loginRequestStatus = REQUEST_STATUS.FAILURE;
     });
   },
