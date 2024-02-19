@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInApi } from "../../../services/auth/auth-api";
+import { signInApi } from "./auth-api";
 import { REQUEST_STATUS } from "../../../constants/request-status";
 
 const initialState = {
-  isAuthenticated: true,
+  isAuthenticated: false,
   user: {
     userId: "",
   },
@@ -18,25 +18,26 @@ const authSlice = createSlice({
   reducers: {
     logout: (state, action) => {
       state.user = initialState.user;
-      state.isAuthenticated = false;
+      state.isAuthenticated = action.payload;
       state.accessToken = "";
       state.refreshToken = "";
-      // localStorage.clear();
+      localStorage.clear();
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(signInApi.fulfilled, (state, action) => {
-      const { data } = action?.payload;
-      state.loginRequestStatus = REQUEST_STATUS.SUCCESS;
-      state.accessToken = data?.data?.authToken;
-      state.refreshToken = data?.data?.refreshToken;
-      state.user.userId = data?.data?.userId;
-      state.isAuthenticated = true;
-      localStorage.setItem("access_token", data?.data?.authToken);
-      localStorage.setItem("refresh_token", data?.data?.refreshToken);
-    });
     builder.addCase(signInApi.pending, (state, action) => {
       state.loginRequestStatus = REQUEST_STATUS.LOADING;
+    });
+    builder.addCase(signInApi.fulfilled, (state, action) => {
+      const { data } = action?.payload;
+      console.log(data);
+      state.loginRequestStatus = REQUEST_STATUS.SUCCESS;
+      state.accessToken = data?.access_token;
+      state.refreshToken = data?.refresh_token;
+      state.user.userId = data?.user?.userId;
+      state.isAuthenticated = true;
+      localStorage.setItem("access_token", data?.access_token);
+      localStorage.setItem("refresh_token", data?.refresh_token);
     });
     builder.addCase(signInApi.rejected, (state, error) => {
       state.isAuthenticated = false;

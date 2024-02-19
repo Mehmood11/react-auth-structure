@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { getToken } from "./tokens";
 import axios from "axios";
 
@@ -13,16 +13,17 @@ const isValidToken = (accessToken) => {
 
 const setSession = (accessToken) => {
   if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("access_token", accessToken);
   } else {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("access_token");
   }
 };
 
 export const isAuthenticated = () => !!getToken();
-
+console.log(isAuthenticated());
 export const handleAuthentication = () => {
   let accessToken = getToken();
+  console.log(accessToken);
   if (!accessToken) {
     return;
   }
@@ -50,10 +51,10 @@ export const setAxiosInterceptors = ({ onLogout }) => {
         return Promise.reject(error?.response?.data?.message);
       } else if (error?.response?.status === 500) {
         return Promise.reject(
-          error?.response?.data?.message || "Internel Server Error"
+          error?.response?.data?.message || "Internal Server Error"
         );
       } else {
-        return Promise.reject("Somthing Went Wrong");
+        return Promise.reject("Something Went Wrong");
       }
     }
   );

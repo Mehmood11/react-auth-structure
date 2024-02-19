@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "../store";
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export function AuthGuard(props) {
   const { children } = props;

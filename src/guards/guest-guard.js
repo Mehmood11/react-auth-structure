@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "../store";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export function GuestGuard(props) {
@@ -25,6 +25,5 @@ export function GuestGuard(props) {
     return null;
   }
   // If got here, it means that the redirect did not occur, and that tells us that the user is authorized.
-
   return <>{children}</>;
 }
